@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<!--
+  Underwater world for BlueROV2 swarm simulation.
+  Requires: ardupilot_gazebo plugin, buoyancy plugin from gz-sim.
+
+  Scene: flat seabed at -10m, water column with buoyancy,
+  scattered "nodule" markers on the seabed.
+-->
+<sdf version="1.9">
+  <world name="underwater_world">
+
+    <!-- Physics -->
+    <physics name="1ms" type="dart">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Plugins -->
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!-- Buoyancy plugin — applies buoyancy to all models with fluid_added_mass -->
+    <plugin filename="gz-sim-buoyancy-system"
+            name="gz::sim::systems::Buoyancy">
+      <uniform_fluid_density>1025</uniform_fluid_density>  <!-- seawater kg/m³ -->
+    </plugin>
+
+    <!-- Lighting -->
+    <light name="sun" type="directional">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.3 0.5 0.6 1</diffuse>   <!-- bluish underwater tint -->
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>0.1 0.1 -0.9</direction>
+    </light>
+
+    <!-- Ambient underwater light -->
+    <scene>
+      <ambient>0.1 0.2 0.3 1.0</ambient>
+      <background>0.05 0.1 0.2 1.0</background>
+      <fog>
+        <color>0.05 0.1 0.2 1</color>
+        <type>linear</type>
+        <start>5</start>
+        <end>30</end>
+        <density>0.05</density>
+      </fog>
+    </scene>
+
+    <!-- Seabed ground plane at z = -10m -->
+    <model name="seabed">
+      <static>true</static>
+      <pose>0 0 -10 0 0 0</pose>
+      <link name="seabed_link">
+        <collision name="col">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 200</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 200</size>
+            </plane>
+          </geometry>
+          <material>
+            <diffuse>0.3 0.25 0.18 1</diffuse>  <!-- sandy brown -->
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Water surface visual (semi-transparent) -->
+    <model name="water_surface">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="water_link">
+        <visual name="vis">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>200 200</size>
+            </plane>
+          </geometry>
+          <material>
+            <diffuse>0.0 0.2 0.5 0.4</diffuse>
+            <specular>0.5 0.5 0.5 1</specular>
+          </material>
+          <transparency>0.6</transparency>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Manganese nodules on seabed (static markers) -->
+    <!-- 20 nodules scattered around -->
+    <model name="nodule_0"><static>true</static><pose>5 3 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.15</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_1"><static>true</static><pose>-3 7 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.12</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_2"><static>true</static><pose>8 -5 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.18</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_3"><static>true</static><pose>-7 -4 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.14</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_4"><static>true</static><pose>12 2 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.16</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_5"><static>true</static><pose>-10 8 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.13</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_6"><static>true</static><pose>2 -12 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.17</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+    <model name="nodule_7"><static>true</static><pose>-5 -10 -9.7 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.11</radius></geometry></visual>
+      <material><diffuse>0.4 0.3 0.1 1</diffuse></material></link></model>
+
+    <!-- USBL Transceiver buoy marker (visual only) -->
+    <model name="usbl_transceiver">
+      <static>true</static>
+      <pose>0 0 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="vis">
+          <geometry><cylinder><radius>0.2</radius><length>0.5</length></cylinder></geometry>
+          <material><diffuse>1 0.8 0 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

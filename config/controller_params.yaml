@@ -1,0 +1,49 @@
+# BlueROV2 Swarm Controller Parameters
+# Tune these values based on your specific BlueROV2 configuration
+
+rov_controller:
+  ros__parameters:
+    # Velocity limits
+    max_horizontal_vel: 1.0      # m/s — BlueROV2 Heavy max ~1.5 m/s
+    max_vertical_vel: 0.5        # m/s
+    max_yaw_rate: 0.5            # rad/s
+
+    # Position tolerance
+    position_tolerance: 0.3      # m — considered "at target"
+    depth_hold: -3.0             # default operating depth (m, negative = underwater)
+
+    # PID gains — XY plane (horizontal)
+    # Increase kp for faster response, decrease if oscillating
+    pid_xy_kp: 0.6
+    pid_xy_ki: 0.02
+    pid_xy_kd: 0.15
+
+    # PID gains — Z axis (depth)
+    pid_z_kp: 0.8
+    pid_z_ki: 0.05
+    pid_z_kd: 0.10
+
+    # PID gains — Yaw
+    pid_yaw_kp: 1.2
+    pid_yaw_ki: 0.0
+    pid_yaw_kd: 0.20
+
+    # Control loop rate
+    control_rate_hz: 20.0
+
+formation_manager:
+  ros__parameters:
+    formation_type: "line"       # line | v_shape | grid | diamond
+    formation_spacing_m: 5.0     # meters between ROVs in formation
+    update_rate_hz: 10.0
+
+usbl_simulator:
+  ros__parameters:
+    update_rate_hz: 2.0          # typical USBL update rate
+    base_noise_m: 0.15           # ~15cm baseline noise (Water Linked M64 spec)
+    range_noise_factor: 0.01     # 1% of range added as noise
+    dropout_probability: 0.02    # 2% packet loss
+    max_range_m: 500.0           # USBL max range
+    transceiver_x: 0.0
+    transceiver_y: 0.0
+    transceiver_z: 0.5           # surface transceiver
